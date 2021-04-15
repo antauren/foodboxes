@@ -1,1 +1,2 @@
 djangorestframework==3.12.4
+Pillow==8.2.0
