@@ -3,6 +3,6 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    middle_name = models.CharField('Отчество')
-    phone = models.CharField('Телефон')
-    address = models.CharField('Адрес')
+    middle_name = models.CharField('Отчество', max_length=100)
+    phone = models.CharField('Телефон', max_length=100)
+    address = models.CharField('Адрес', max_length=256)
