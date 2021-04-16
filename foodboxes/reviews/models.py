@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class Reviews(models.Model):
+class Review(models.Model):
     PUBLISHED = 'published'
     ON_MODERATION = 'on moderation'
     REJECTED = 'rejected'
