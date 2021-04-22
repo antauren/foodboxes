@@ -1,6 +1,7 @@
 import requests
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+from tqdm import tqdm
 
 User = get_user_model()
 
@@ -17,7 +18,7 @@ class Command(BaseCommand):
 
         users = response.json()
 
-        for user_dict in users:
+        for user_dict in tqdm(users, desc='users loading'):
             id_ = user_dict['id']
 
             email = user_dict['email']

@@ -3,6 +3,7 @@ import datetime as dt
 import requests
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+from tqdm import tqdm
 
 from reviews.models import Review
 
@@ -23,7 +24,7 @@ class Command(BaseCommand):
 
         dt_format = '%Y-%m-%d'
 
-        for review_dict in reviews:
+        for review_dict in tqdm(reviews, desc='reviews loading'):
             id_ = review_dict['id']
             author_id = review_dict['author']
             content = review_dict['content']
