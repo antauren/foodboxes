@@ -1,9 +1,11 @@
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .models import Item
 
 
+@api_view(['GET'])
 def get_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
 
@@ -17,4 +19,4 @@ def get_item(request, item_id):
 
     }
 
-    return JsonResponse(response_dict, safe=False, json_dumps_params={'indent': 4, 'ensure_ascii': False})
+    return Response(response_dict)
