@@ -22,31 +22,33 @@ class Command(BaseCommand):
         items = response.json()
 
         for item_dict in tqdm(items, desc='items loading'):
-            id_ = item_dict['id']
-            title = item_dict['title']
-            description = item_dict['description']
-            weight = item_dict['weight_grams']
-            price = item_dict['price']
-            img_url = item_dict['image']
-            size = item_dict['size']
-            cat = item_dict['cat']
-
-            item, _ = Item.objects.update_or_create(id=id_,
-                                                    defaults={'title': title,
-                                                              'description': description,
-                                                              'weight': weight,
-                                                              'price': price,
-                                                              },
-                                                    )
             try:
+                id_ = item_dict['id']
+                title = item_dict['title']
+                description = item_dict['description']
+                weight = item_dict['weight_grams']
+                price = item_dict['price']
+                img_url = item_dict['image']
+                size = item_dict['size']
+                cat = item_dict['cat']
+
+                item, _ = Item.objects.update_or_create(id=id_,
+                                                        defaults={'title': title,
+                                                                  'description': description,
+                                                                  'weight': weight,
+                                                                  'price': price,
+                                                                  },
+                                                        )
+
                 img_response = requests.get(img_url)
                 img_response.raise_for_status()
 
                 img_filename = get_filename_from_url(img_url)
                 item.image.save(img_filename, ContentFile(img_response.content))
 
-            except (requests.exceptions.HTTPError, requests.exceptions.MissingSchema):
-                pass
+            except Exception as err:
+                error_text = '{}: {}'.format(err.__class__.__name__, err)
+                tqdm.write(error_text)
 
 
 def get_filename_from_url(url):

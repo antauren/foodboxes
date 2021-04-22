@@ -25,38 +25,42 @@ class Command(BaseCommand):
         dt_format = '%Y-%m-%d'
 
         for review_dict in tqdm(reviews, desc='reviews loading'):
-            id_ = review_dict['id']
-            author_id = review_dict['author']
-            content = review_dict['content']
-
             try:
-                created_at = dt.datetime.strptime(review_dict['created_at'], dt_format)
-            except ValueError:
-                continue
+                id_ = review_dict['id']
+                author_id = review_dict['author']
+                content = review_dict['content']
 
-            try:
-                published_at = dt.datetime.strptime(review_dict['published_at'], dt_format)
-            except ValueError:
-                continue
+                try:
+                    created_at = dt.datetime.strptime(review_dict['created_at'], dt_format)
+                except ValueError:
+                    continue
 
-            review_status = review_dict['status']
+                try:
+                    published_at = dt.datetime.strptime(review_dict['published_at'], dt_format)
+                except ValueError:
+                    continue
 
-            if review_status == 'published':
-                status = Review.PUBLISHED
-            elif review_status == 'new':
-                status = Review.ON_MODERATION
-            else:
-                status = Review.REJECTED
+                review_status = review_dict['status']
 
-            author = User.objects.filter(id=author_id).first()
-            if not author:
-                continue
+                if review_status == 'published':
+                    status = Review.PUBLISHED
+                elif review_status == 'new':
+                    status = Review.ON_MODERATION
+                else:
+                    status = Review.REJECTED
 
-            review, _ = Review.objects.update_or_create(id=id_,
-                                                        defaults={'author': author,
-                                                                  'text': content,
-                                                                  'created_at': created_at,
-                                                                  'published_at': published_at,
-                                                                  'status': status,
-                                                                  },
-                                                        )
+                author = User.objects.filter(id=author_id).first()
+                if not author:
+                    continue
+
+                review, _ = Review.objects.update_or_create(id=id_,
+                                                            defaults={'author': author,
+                                                                      'text': content,
+                                                                      'created_at': created_at,
+                                                                      'published_at': published_at,
+                                                                      'status': status,
+                                                                      },
+                                                            )
+            except Exception as err:
+                error_text = '{}: {}'.format(err.__class__.__name__, err)
+                tqdm.write(error_text)

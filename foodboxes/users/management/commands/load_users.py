@@ -19,30 +19,35 @@ class Command(BaseCommand):
         users = response.json()
 
         for user_dict in tqdm(users, desc='users loading'):
-            id_ = user_dict['id']
 
-            email = user_dict['email']
-            password = user_dict['password']
-            info = user_dict['info']
-            contacts = user_dict['contacts']
-            city_kladr = user_dict['city_kladr']
-            premium = user_dict['premium']
+            try:
+                id_ = user_dict['id']
 
-            surname = info['surname']
-            name = info['name']
-            patronymic = info['patronymic']
+                email = user_dict['email']
+                password = user_dict['password']
+                info = user_dict['info']
+                contacts = user_dict['contacts']
+                city_kladr = user_dict['city_kladr']
+                premium = user_dict['premium']
 
-            phoneNumber = contacts['phoneNumber']
-            username = email.split('@')[0]
+                surname = info['surname']
+                name = info['name']
+                patronymic = info['patronymic']
 
-            user, _ = User.objects.update_or_create(id=id_,
-                                                    defaults={'password': password,
-                                                              'phone': phoneNumber,
-                                                              'middle_name': patronymic,
-                                                              'username': username,
-                                                              'address': city_kladr,
-                                                              'email': email,
-                                                              'first_name': name,
-                                                              'last_name': surname,
-                                                              },
-                                                    )
+                phoneNumber = contacts['phoneNumber']
+                username = email.split('@')[0]
+
+                user, _ = User.objects.update_or_create(id=id_,
+                                                        defaults={'password': password,
+                                                                  'phone': phoneNumber,
+                                                                  'middle_name': patronymic,
+                                                                  'username': username,
+                                                                  'address': city_kladr,
+                                                                  'email': email,
+                                                                  'first_name': name,
+                                                                  'last_name': surname,
+                                                                  },
+                                                        )
+            except Exception as err:
+                error_text = '{}: {}'.format(err.__class__.__name__, err)
+                tqdm.write(error_text)
