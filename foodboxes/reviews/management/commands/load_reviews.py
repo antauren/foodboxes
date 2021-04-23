@@ -31,15 +31,8 @@ class Command(BaseCommand):
                 author_id = review_dict['author']
                 content = review_dict['content']
 
-                try:
-                    created_at = timezone.make_aware(dt.datetime.strptime(review_dict['created_at'], dt_format))
-                except ValueError:
-                    continue
-
-                try:
-                    published_at = timezone.make_aware(dt.datetime.strptime(review_dict['published_at'], dt_format))
-                except ValueError:
-                    continue
+                created_at = timezone.make_aware(dt.datetime.strptime(review_dict['created_at'], dt_format))
+                published_at = timezone.make_aware(dt.datetime.strptime(review_dict['published_at'], dt_format))
 
                 review_status = review_dict['status']
 
