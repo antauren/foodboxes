@@ -3,6 +3,7 @@ import datetime as dt
 import requests
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 from tqdm import tqdm
 
 from reviews.models import Review
@@ -31,12 +32,12 @@ class Command(BaseCommand):
                 content = review_dict['content']
 
                 try:
-                    created_at = dt.datetime.strptime(review_dict['created_at'], dt_format)
+                    created_at = timezone.make_aware(dt.datetime.strptime(review_dict['created_at'], dt_format))
                 except ValueError:
                     continue
 
                 try:
-                    published_at = dt.datetime.strptime(review_dict['published_at'], dt_format)
+                    published_at = timezone.make_aware(dt.datetime.strptime(review_dict['published_at'], dt_format))
                 except ValueError:
                     continue
 
