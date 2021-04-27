@@ -21,33 +21,22 @@ class Command(BaseCommand):
         for user_dict in tqdm(users, desc='users loading'):
 
             try:
-                id_ = user_dict['id']
-
                 email = user_dict['email']
-                password = user_dict['password']
                 info = user_dict['info']
-                contacts = user_dict['contacts']
-                city_kladr = user_dict['city_kladr']
-                premium = user_dict['premium']
 
-                surname = info['surname']
-                name = info['name']
-                patronymic = info['patronymic']
-
-                phoneNumber = contacts['phoneNumber']
                 username = email.split('@')[0]
 
                 user, _ = User.objects.update_or_create(
-                    id=id_,
+                    id=user_dict['id'],
                     defaults={
-                        'password': password,
-                        'phone': phoneNumber,
-                        'middle_name': patronymic,
+                        'password': user_dict['password'],
+                        'phone': user_dict['contacts']['phoneNumber'],
+                        'middle_name': info['patronymic'],
                         'username': username,
-                        'address': city_kladr,
+                        'address': user_dict['city_kladr'],
                         'email': email,
-                        'first_name': name,
-                        'last_name': surname,
+                        'first_name': info['name'],
+                        'last_name': info['surname'],
                     },
                 )
             except Exception as err:

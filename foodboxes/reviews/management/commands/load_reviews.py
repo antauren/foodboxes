@@ -16,9 +16,7 @@ class Command(BaseCommand):
         parser.add_argument('-u', '--url', required=True)
 
     def handle(self, *args, **options):
-        url = options['url']
-
-        response = requests.get(url)
+        response = requests.get(options['url'])
         response.raise_for_status()
 
         reviews = response.json()
@@ -27,10 +25,6 @@ class Command(BaseCommand):
 
         for review_dict in tqdm(reviews, desc='reviews loading'):
             try:
-                id_ = review_dict['id']
-                author_id = review_dict['author']
-                content = review_dict['content']
-
                 created_at = timezone.make_aware(dt.datetime.strptime(review_dict['created_at'], dt_format))
                 published_at = timezone.make_aware(dt.datetime.strptime(review_dict['published_at'], dt_format))
 
@@ -43,15 +37,15 @@ class Command(BaseCommand):
                 else:
                     status = Review.REJECTED
 
-                author = User.objects.filter(id=author_id).first()
+                author = User.objects.filter(id=review_dict['author']).first()
                 if not author:
                     continue
 
                 review, _ = Review.objects.update_or_create(
-                    id=id_,
+                    id=review_dict['id'],
                     defaults={
                         'author': author,
-                        'text': content,
+                        'text': review_dict['content'],
                         'created_at': created_at,
                         'published_at': published_at,
                         'status': status,

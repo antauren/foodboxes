@@ -23,22 +23,15 @@ class Command(BaseCommand):
 
         for item_dict in tqdm(items, desc='items loading'):
             try:
-                id_ = item_dict['id']
-                title = item_dict['title']
-                description = item_dict['description']
-                weight = item_dict['weight_grams']
-                price = item_dict['price']
                 img_url = item_dict['image']
-                size = item_dict['size']
-                cat = item_dict['cat']
 
                 item, _ = Item.objects.update_or_create(
-                    id=id_,
+                    id=item_dict['id'],
                     defaults={
-                        'title': title,
-                        'description': description,
-                        'weight': weight,
-                        'price': price,
+                        'title': item_dict['title'],
+                        'description': item_dict['description'],
+                        'weight': item_dict['weight_grams'],
+                        'price': item_dict['price'],
                     },
                 )
 
