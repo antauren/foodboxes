@@ -47,14 +47,16 @@ class Command(BaseCommand):
                 if not author:
                     continue
 
-                review, _ = Review.objects.update_or_create(id=id_,
-                                                            defaults={'author': author,
-                                                                      'text': content,
-                                                                      'created_at': created_at,
-                                                                      'published_at': published_at,
-                                                                      'status': status,
-                                                                      },
-                                                            )
+                review, _ = Review.objects.update_or_create(
+                    id=id_,
+                    defaults={
+                        'author': author,
+                        'text': content,
+                        'created_at': created_at,
+                        'published_at': published_at,
+                        'status': status,
+                    },
+                )
             except Exception as err:
                 error_text = '{}: {}'.format(err.__class__.__name__, err)
                 tqdm.write(error_text)

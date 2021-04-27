@@ -37,17 +37,19 @@ class Command(BaseCommand):
                 phoneNumber = contacts['phoneNumber']
                 username = email.split('@')[0]
 
-                user, _ = User.objects.update_or_create(id=id_,
-                                                        defaults={'password': password,
-                                                                  'phone': phoneNumber,
-                                                                  'middle_name': patronymic,
-                                                                  'username': username,
-                                                                  'address': city_kladr,
-                                                                  'email': email,
-                                                                  'first_name': name,
-                                                                  'last_name': surname,
-                                                                  },
-                                                        )
+                user, _ = User.objects.update_or_create(
+                    id=id_,
+                    defaults={
+                        'password': password,
+                        'phone': phoneNumber,
+                        'middle_name': patronymic,
+                        'username': username,
+                        'address': city_kladr,
+                        'email': email,
+                        'first_name': name,
+                        'last_name': surname,
+                    },
+                )
             except Exception as err:
                 error_text = '{}: {}'.format(err.__class__.__name__, err)
                 tqdm.write(error_text)

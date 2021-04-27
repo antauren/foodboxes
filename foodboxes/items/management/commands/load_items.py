@@ -32,13 +32,15 @@ class Command(BaseCommand):
                 size = item_dict['size']
                 cat = item_dict['cat']
 
-                item, _ = Item.objects.update_or_create(id=id_,
-                                                        defaults={'title': title,
-                                                                  'description': description,
-                                                                  'weight': weight,
-                                                                  'price': price,
-                                                                  },
-                                                        )
+                item, _ = Item.objects.update_or_create(
+                    id=id_,
+                    defaults={
+                        'title': title,
+                        'description': description,
+                        'weight': weight,
+                        'price': price,
+                    },
+                )
 
                 img_response = requests.get(img_url)
                 img_response.raise_for_status()
